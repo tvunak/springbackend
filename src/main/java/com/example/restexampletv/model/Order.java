@@ -32,7 +32,6 @@ public class Order {
     private Address deliveryAddress;
 
     @ManyToMany()
-    //@JoinColumn(name="article_id")
     @JoinTable(name = "order_article", joinColumns = @JoinColumn(name = "orders_id"),
             inverseJoinColumns = @JoinColumn(name = "article_id")
     )
