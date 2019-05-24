@@ -72,7 +72,6 @@ public class OrderService {
                 Order order = setOrder(user, deliveryAddress, deliveryAddress, articles);
                 return order;
             }
-
             
         } catch (JSONException e) {
             e.printStackTrace();
