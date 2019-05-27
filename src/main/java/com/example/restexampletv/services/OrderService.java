@@ -63,8 +63,6 @@ public class OrderService {
             if (deliveryAddressId != billingAddressId){
                 Address deliveryAddress = this.addressRepository.getOne(deliveryAddressId);
                 Address billingAddress = this.addressRepository.getOne(billingAddressId);
-
-
                 Order order = setOrder(user, deliveryAddress, billingAddress, articles);
                 return order;
             }else{
