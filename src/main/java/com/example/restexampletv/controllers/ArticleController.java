@@ -1,20 +1,25 @@
 package com.example.restexampletv.controllers;
 
 import com.example.restexampletv.model.Article;
+import com.example.restexampletv.model.ArticleImage;
+import com.example.restexampletv.model.UploadFileResponse;
 import com.example.restexampletv.repositories.ArticleRepository;
 import com.example.restexampletv.services.ArticleService;
+import com.example.restexampletv.services.StorageService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpRequest;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.util.ArrayList;
+import org.springframework.core.io.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 public class ArticleController {
@@ -22,7 +27,11 @@ public class ArticleController {
     @Autowired
     private ArticleService articleService;
 
+    @Autowired
+    private StorageService fileStorageService;
+
     public ArticleController(ArticleRepository articleRepository){
+
     }
 
     @CrossOrigin(origins = "http://localhost:4200")
@@ -63,6 +72,61 @@ public class ArticleController {
     public Article updateArticle(@RequestBody String jsonStr){
         return this.articleService.updateArticle(jsonStr);
     }
+
+
+
+    @RequestMapping(value="/api/uploadFile/{id}",  method= RequestMethod.POST)
+    public UploadFileResponse uploadFile(@RequestPart("file") MultipartFile file, @PathVariable long id) {
+        String fileName = fileStorageService.storeFile(file);
+        Article article = this.articleService.getArticle(id);
+
+        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/downloadFile/")
+                .path(fileName)
+                .toUriString();
+
+        ArticleImage  articleImage = new ArticleImage(fileName, fileDownloadUri,
+                file.getContentType(), file.getSize(), article);
+
+        this.articleService.saveArticleImage(articleImage);
+        System.out.println("The file uploaded is:");
+        System.out.println(file.getOriginalFilename());
+        System.out.println("The article id:");
+        System.out.println(id);
+        System.out.println("The file download url is:");
+        System.out.println(fileDownloadUri);
+        //System.out.println(id);
+
+        return new UploadFileResponse(fileName, fileDownloadUri,
+                file.getContentType(), file.getSize());
+    }
+
+    @RequestMapping(value="/api/downloadFile/{fileName:.+}",  method= RequestMethod.GET)
+    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
+        // Load file as Resource
+        Resource resource = fileStorageService.loadFileAsResource(fileName);
+
+        // Try to determine file's content type
+        String contentType = null;
+        try {
+            contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+        } catch (IOException ex) {
+            System.out.println("Could not determine file type.");
+          //  logger.info("Could not determine file type.");
+        }
+
+        // Fallback to the default content type if type could not be determined
+        if(contentType == null) {
+            contentType = "application/octet-stream";
+        }
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
+    }
+
+
 
 
 }

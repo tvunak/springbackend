@@ -2,7 +2,9 @@ package com.example.restexampletv.services;
 
 import com.example.restexampletv.model.Article;
 import com.example.restexampletv.model.ArticleDetail;
+import com.example.restexampletv.model.ArticleImage;
 import com.example.restexampletv.repositories.ArticleDetailRepository;
+import com.example.restexampletv.repositories.ArticleImageRepository;
 import com.example.restexampletv.repositories.ArticleRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,6 +24,9 @@ public class ArticleService {
 
     @Autowired
     private ArticleDetailRepository articleDetailRepository;
+
+    @Autowired
+    private ArticleImageRepository articleImageRepository;
 
     public List<Article> getAllArticles(){
         return articleRepository.findAll();
@@ -112,6 +117,10 @@ public class ArticleService {
             return null;
         }
         return null;
+    }
+
+    public void saveArticleImage(ArticleImage image){
+        this.articleImageRepository.save(image);
     }
 
 

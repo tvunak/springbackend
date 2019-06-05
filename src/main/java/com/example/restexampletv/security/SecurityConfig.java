@@ -90,7 +90,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                 .antMatchers("/api/user").hasRole("ADMIN")
                 .antMatchers("/api/article").hasRole("ADMIN")
                 .antMatchers("/api/address/add").authenticated()
-                .antMatchers("/api/basket").authenticated();
+                .antMatchers("/api/basket").authenticated()
+                .antMatchers( "/api/uploadFile").authenticated()
+                .antMatchers( "/api/downloadFile/").authenticated();
 
     }
 
