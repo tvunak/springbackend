@@ -51,14 +51,16 @@ public class ArticleController {
     }
 
     @RequestMapping(value="/api/article", method= RequestMethod.POST, consumes = "application/json")
-    public List<Article> addArticle(@RequestBody String article, @RequestHeader HttpHeaders headers) throws JsonProcessingException {
+    public Article addArticle(@RequestBody String article, @RequestHeader HttpHeaders headers) throws JsonProcessingException {
         System.out.println("Controler addArticle");
         System.out.println(headers.get("Authorization").toString());
 
-        this.articleService.addNewArticle(article);
+
 
         //just for testing --> returning all articles
-        return this.articleService.getAllArticles();
+        //dif between two
+        //return this.articleService.getAllArticles();
+        return this.articleService.addNewArticle(article);
     }
 
     @RequestMapping(value="/api/article", method= RequestMethod.DELETE)

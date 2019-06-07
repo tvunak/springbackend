@@ -48,16 +48,17 @@ public class ArticleService {
 
     }
 
-    public List<Article> addNewArticle(String articleWithDetails) throws JsonProcessingException {
+    public Article addNewArticle(String articleWithDetails) throws JsonProcessingException {
         System.out.println();
         System.out.println("article service");
         ObjectMapper om = new ObjectMapper();
         System.out.println(om.writeValueAsString(articleWithDetails));
+        Article articleObject = new Article();
         try {
             // cast string to json
             JSONObject jsonArticle = new JSONObject(articleWithDetails);
             // creating article
-            Article articleObject = om.readValue(articleWithDetails, Article.class);
+            articleObject = om.readValue(articleWithDetails, Article.class);
 
             // fetch article detail from initial string
             String articleDetailString = jsonArticle.getString("articleDetail");
@@ -75,7 +76,7 @@ public class ArticleService {
         //ArticleDetail articleDetail = new ArticleDetail(article);
         //article.setArticleDetail(articleDetail);
 
-        return articleRepository.findAll();
+        return articleObject;
     }
 
     public String deleteArticle(Long id){
