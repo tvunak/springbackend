@@ -4,7 +4,6 @@ import com.example.restexampletv.model.Basket;
 import com.example.restexampletv.model.User;
 import com.example.restexampletv.repositories.BasketRepository;
 import com.example.restexampletv.repositories.UserRepository;
-import com.example.restexampletv.security.TokenAuthenticationService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONArray;
@@ -29,8 +28,6 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private TokenAuthenticationService tokenAuthenticationService;
 
     @Autowired
     private BasketRepository basketRepository;

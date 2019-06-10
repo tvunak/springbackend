@@ -21,7 +21,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import javax.sql.DataSource;
 import java.util.Collections;
 
 
@@ -32,9 +31,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
 
     @Autowired
     AppUserDetailService userDetailService;
-
-    @Autowired
-    private DataSource dataSource;
 
     @Override
     public void configure(WebSecurity web) throws Exception {

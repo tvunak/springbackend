@@ -1,12 +1,7 @@
 package com.example.restexampletv.security;
 
-import com.example.restexampletv.controllers.UserController;
 import com.example.restexampletv.model.User;
-import com.example.restexampletv.repositories.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,15 +15,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.util.Collections;
+
 
 
 public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
     User creds;
-
-    @Autowired
-    private AppUserDetailService appUserDetailService;
-
 
     public JWTLoginFilter(String url, AuthenticationManager authManager) {
         super(new AntPathRequestMatcher(url));

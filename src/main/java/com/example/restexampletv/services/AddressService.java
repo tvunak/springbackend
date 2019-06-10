@@ -5,14 +5,12 @@ import com.example.restexampletv.model.Address;
 import com.example.restexampletv.model.User;
 import com.example.restexampletv.repositories.AddressRepository;
 import com.example.restexampletv.repositories.UserRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.DataInput;
 import java.io.IOException;
 import java.util.List;
 
