@@ -1,5 +1,6 @@
 package com.example.restexampletv.services;
 
+import com.example.restexampletv.Exceptions.ArticleNotFoundException;
 import com.example.restexampletv.model.Article;
 import com.example.restexampletv.model.ArticleDetail;
 import com.example.restexampletv.model.ArticleImage;
@@ -33,7 +34,11 @@ public class ArticleService {
     }
 
     public Article getArticle(Long id){
-        return articleRepository.getArticleById(id);
+    	Article article = articleRepository.getArticleById(id);
+    	if (article == null ) {
+    		throw new ArticleNotFoundException("Article not found! ID: "+id);
+    	}
+        return article;
     }
     public String getArticleWithDetails(Long id) throws JsonProcessingException, JSONException {
         ObjectMapper om = new ObjectMapper();

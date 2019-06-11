@@ -1,8 +1,10 @@
 package com.example.restexampletv.controllers;
 
+import com.example.restexampletv.Exceptions.ArticleNotFoundException;
 import com.example.restexampletv.model.Article;
 import com.example.restexampletv.model.ArticleImage;
 import com.example.restexampletv.model.UploadFileResponse;
+import com.example.restexampletv.model.ErrorResponse.ArticleErrorResponse;
 import com.example.restexampletv.repositories.ArticleRepository;
 import com.example.restexampletv.services.ArticleService;
 import com.example.restexampletv.services.StorageService;
@@ -10,6 +12,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -126,6 +129,21 @@ public class ArticleController {
                 .contentType(MediaType.parseMediaType(contentType))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
+    }
+    
+    @ExceptionHandler
+    public ResponseEntity<ArticleErrorResponse> handleException(ArticleNotFoundException exc) {
+    	
+    	//create ArticleErrorResponse
+    	ArticleErrorResponse error = new ArticleErrorResponse();
+    	
+    	error.setStatus(HttpStatus.NOT_FOUND.value());
+    	error.setMessage(exc.getMessage());
+    	error.setTimestamp(System.currentTimeMillis());
+    	
+    	//return responseEntity
+    	return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    	
     }
 
 
