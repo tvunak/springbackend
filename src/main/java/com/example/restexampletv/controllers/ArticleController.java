@@ -1,6 +1,7 @@
 package com.example.restexampletv.controllers;
 
 import com.example.restexampletv.Exceptions.ArticleNotFoundException;
+import com.example.restexampletv.Exceptions.TokenNotValidException;
 import com.example.restexampletv.model.Article;
 import com.example.restexampletv.model.ArticleImage;
 import com.example.restexampletv.model.UploadFileResponse;
@@ -9,6 +10,7 @@ import com.example.restexampletv.repositories.ArticleRepository;
 import com.example.restexampletv.services.ArticleService;
 import com.example.restexampletv.services.StorageService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -132,7 +134,7 @@ public class ArticleController {
     }
     
     @ExceptionHandler
-    public ResponseEntity<ArticleErrorResponse> handleException(ArticleNotFoundException exc) {
+    public ResponseEntity<ArticleErrorResponse> handleArticleException(ArticleNotFoundException exc) {
     	
     	//create ArticleErrorResponse
     	ArticleErrorResponse error = new ArticleErrorResponse();
@@ -145,8 +147,10 @@ public class ArticleController {
     	return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     	
     }
-
-
+    
+    
+    
+    
 
 
 }

@@ -7,6 +7,8 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,9 +19,15 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+
+import com.example.restexampletv.Exceptions.TokenNotValidException;
+import com.example.restexampletv.model.ErrorResponse.ArticleErrorResponse;
+
+import io.jsonwebtoken.ExpiredJwtException;
 
 import java.util.Collections;
 
@@ -51,7 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
     }
 
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    protected void configure(HttpSecurity http) throws Exception, TokenNotValidException {
 
        /* http
                 .csrf().disable()
@@ -109,6 +117,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
         FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(new CorsFilter(source));
         bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return bean;
+    }
+    
+    @ExceptionHandler
+    public ResponseEntity<ArticleErrorResponse> handleArticleException(ExpiredJwtException exc) {
+    	
+    	//create ArticleErrorResponse
+    	ArticleErrorResponse error = new ArticleErrorResponse();
+    	
+    	error.setStatus(HttpStatus.UNAUTHORIZED.value());
+    	error.setMessage(exc.getMessage());
+    	error.setTimestamp(System.currentTimeMillis());
+    	
+    	//return responseEntity
+    	return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
+    	
     }
 
 }
